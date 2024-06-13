@@ -18,17 +18,17 @@ class Star:
     z: int
     weight: int
     profit: int
-    routes: List[int]
+    routes: List[int] # List of connected star by index
 
-    def __init__(self, i: int, x: int, y: int, z: int, weight: int, profit: int, routes: List[int]=None):
-        self.name = chr(ord('A') + i)
+    def __init__(self, i: int, name: str, x: int, y: int, z: int, weight: int, profit: int, routes: List[int]=None):
+        self.name = name
         self.i = i
         self.x = x
         self.y = y
         self.z = z
         self.weight = weight
         self.profit = profit
-        self.routes = routes if routes is not None else []  # List of connected star IDs
+        self.routes = routes if routes is not None else [] # List of connected star by index
 
 def calc_dis(star1: Star, star2: Star):
     """Calculate the distance between two stars using the Euclidean distance formula"""
@@ -42,13 +42,16 @@ def calc_dis(star1: Star, star2: Star):
     return dist
 
 def write_file(stars: List[Star]):
-	"""Save the dataset to a text file"""
-	data = ''
-	for i, size in enumerate(stars):
-		data += f"{size.i},,{size.name},,{size.x},,{size.y},,{size.z},,{size.weight},,{size.profit},,{size.routes}\n"
+    """Save the dataset to a text file"""
+    data = ''
+    for i, size in enumerate(stars):
+        data += f"{size.i},,{size.name},,{size.x},,{size.y},,{size.z},,{size.weight},,{size.profit},,{size.routes}\n"
 	
-	with open("./sets/1.txt", 'w') as file:
-		file.write(data)
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(dir_path, 'sets', '1.txt')
+
+    with open(file_path, 'w') as file:
+        file.write(data)
 
 def read_file():
     """Load the dataset from a text file"""
@@ -62,7 +65,7 @@ def read_file():
         for l in lines:
             data = l.strip().split(',,')
             routes = list(map(int, data[7].replace('[', '').replace(']', '').split(', ')))
-            star = Star(int(data[0]), int(data[2]), int(data[3]), int(data[4]), int(data[5]), int(data[6]), routes)
+            star = Star(int(data[0]), data[1], int(data[2]), int(data[3]), int(data[4]), int(data[5]), int(data[6]), routes)
             stars.append(star)
 
     return stars

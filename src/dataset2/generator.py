@@ -1,8 +1,7 @@
-import math
 import random
-import matplotlib.pyplot as plt
-import networkx as nx
-import graphlib
+from typing import List
+
+from helper import Star, draw_graph, write_file
 
 def rand_num(max: int):
     # Allowed digits based on non-leader members' ID
@@ -26,7 +25,7 @@ def generate_stars(size: int):
     
 	return stars
 
-def connect_stars(stars, num_routes):
+def connect_stars(stars: List[Star], num_routes: int):
 	route_count = 0
 	star_len = len(stars)
 
@@ -50,7 +49,7 @@ def connect_stars(stars, num_routes):
 	if route_count != num_routes:
 		exit(f"ERROR: Route count isn't {num_routes}, it's {route_count}")
 
-def get_unique_routes(stars, num_routes):
+def get_unique_routes(stars: List[Star], num_routes: int):
 	routes_set = set()
 	for star in stars:
 		i = star.i
@@ -87,15 +86,9 @@ def get_unique_routes(stars, num_routes):
 def main():
 	num_stars = 20
 	num_routes = 54
-
+	
 	stars = generate_stars(num_stars)
 	connect_stars(stars, num_routes)
-
-	# for star in stars:
-	# 	print(f"Star {star.name}: {star.i}")
-	# 	print(f"Location: ({star.x}, {star.y}, {star.z})")
-	# 	print(f"Weight: {star.weight}, Profit: {star.profit}")
-	# 	print(f"Routes: {star.routes}\n")
 
 	unique_routes = get_unique_routes(stars, num_routes)
 	unique_routes = sorted(unique_routes)
