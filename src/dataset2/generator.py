@@ -4,14 +4,26 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import graphlib
 
-from networkx import convert_node_labels_to_integers
-from helper import Star, write_file
+def rand_num(max: int):
+    # Allowed digits based on non-leader members' ID
+	id = 1221302021 + 1201102665 + 1221301330
+	allowed_digits = [int(d) for d in str(id)]
+	
+	return int("".join(str(random.choice(allowed_digits)) for _ in range(max)))
 
-def generate_stars(count):
+def generate_stars(size: int):
 	stars = []
-	for i in range(count):
-		x, y, z, weight, profit = random.randint(0, 9), random.randint(0, 9), random.randint(0, 9), random.randint(0, 9), random.randint(0, 9)
-		stars.append(Star(i, x, y, z, weight, profit))
+	names = set()
+	name = chr(ord('A') + rand_num(1)) + chr(ord('A') + rand_num(1))
+
+	for i in range(size):
+		while name in names:
+			name = chr(ord('A') + rand_num(1)) + chr(ord('A') + rand_num(1))
+		
+		x, y, z, weight, profit = rand_num(3), rand_num(3), rand_num(3), rand_num(3), rand_num(3)
+		stars.append(Star(i, name, x, y, z, weight, profit))
+		names.add(name)
+    
 	return stars
 
 def connect_stars(stars, num_routes):
@@ -75,8 +87,6 @@ def get_unique_routes(stars, num_routes):
 def main():
 	num_stars = 20
 	num_routes = 54
-	# FIX: fill in later
-	# allowed_digits = []
 
 	stars = generate_stars(num_stars)
 	connect_stars(stars, num_routes)
