@@ -23,8 +23,8 @@ def plot_timing_data(csv_file, output_dir='graph'):
     plt.plot(attributes, values, marker='o', linestyle='-', color='b')
 
     # Adding labels and title
-    plt.xlabel('Attributes')
-    plt.ylabel('Values')
+    plt.xlabel('Data Size')
+    plt.ylabel('Time (ms)')
     plt.title('Timing Data Visualization')
     plt.grid(True)
 
