@@ -5,14 +5,17 @@ from csv import DictWriter
 from visualize import plot_timing_data
 
 def print_array(arr):
+    # Prints the elements of the array in a single line
     print(" ".join(map(str, arr)))
 
 def write_array_to_file(arr, filename):
+     # Creates the directory if it does not exist and writes the array to a file
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w') as file:
         file.write(" ".join(map(str, arr)) + "\n")
 
 def heapify(arr, n, i):
+    # Maintains the heap property between parent and children nodes
     largest = i
     left = 2 * i + 1
     right = 2 * i + 2
@@ -28,6 +31,7 @@ def heapify(arr, n, i):
         heapify(arr, n, largest)
 
 def heappush(heap, item):
+    # Adds an item to the heap while maintaining the heap property
     heap.append(item)
     current = len(heap) - 1
     while current > 0:
@@ -39,6 +43,7 @@ def heappush(heap, item):
             break
 
 def heappop(heap):
+     # Removes and returns the top element of the heap, re-balancing it afterwards
     n = len(heap)
     if n == 0:
         return None
@@ -51,6 +56,7 @@ def heappop(heap):
     return top
 
 def heap_sort(arr):
+    # Sorts an array using the heap sort algorithm and measures the time taken for insertion and removal
     heap = []
     # Measure time to insert all data into the heap
     start_insert = time.time()
