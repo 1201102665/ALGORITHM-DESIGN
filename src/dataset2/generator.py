@@ -1,7 +1,7 @@
 import random
 from typing import List
 
-from helper import Star, draw_graph, write_file
+from helper import Star, write_file
 
 def rand_num(max: int):
     # Allowed digits based on non-leader members' ID
@@ -94,7 +94,6 @@ def main():
 	unique_routes = sorted(unique_routes)
 
 	write_file(stars)
-	# draw_graph(stars, unique_routes)
 
 if __name__ == '__main__':
 	main()
