@@ -15,7 +15,14 @@ export default () => {
   const tableData = table.map((row) => row.map((num) => String(num).padStart(4, '0')).join(',')).join('\n')
   const toVisitData =
     '| Index | Name | Weight | Profit |\n| --- | --- | --- | --- |\n' +
-    toVisit.map((i) => `| ${String(stars[i].i).padStart(2, '0')} | ${stars[i].name} | ${String(wArr[i]).padStart(3, '0')} | ${String(pArr[i]).padStart(3, '0')} |`).join('\n')
+    toVisit
+      .map(
+        (i) =>
+          `| ${String(stars[i].i).padStart(2, '0')} | ${stars[i].name} | ${String(wArr[i]).padStart(3, '0')} | ${String(
+            pArr[i]
+          ).padStart(3, '0')} |`
+      )
+      .join('\n')
 
   const data = `${tableData}\n\n${toVisitData}`
   writeFileSync(join(__dirname, 'saved/conquer_quest.txt'), data)

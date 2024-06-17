@@ -13,8 +13,17 @@ export default (startI: number = 0) => {
   const routes = readRoutes()
   const table = buildTable(nodes, routes, startI)
 
-  const nodesMap = nodes.map(({ i, prev, dist }) => `${String(i).padStart(2, '0')}, previous -> ${String(prev).padStart(2, '0')}, distance -> ${String(dist).padStart(3, '0')} `).join('\n')
-  const paths = nodes.map((_, i) => `${startI} => ${String(i).padStart(2, '0')}: ${getShortestPath(table, startI, i).join(' -> ')}`).join('\n')
+  const nodesMap = nodes
+    .map(
+      ({ i, prev, dist }) =>
+        `${String(i).padStart(2, '0')}, previous -> ${String(prev).padStart(2, '0')}, distance -> ${String(
+          dist
+        ).padStart(3, '0')} `
+    )
+    .join('\n')
+  const paths = nodes
+    .map((_, i) => `${startI} => ${String(i).padStart(2, '0')}: ${getShortestPath(table, startI, i).join(' -> ')}`)
+    .join('\n')
 
   const data = `${nodesMap}\n\n${paths}`
   writeFileSync(join(__dirname, 'saved/shortest_paths.txt'), data)

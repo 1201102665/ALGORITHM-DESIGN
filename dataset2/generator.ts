@@ -37,7 +37,9 @@ function generateStars(size: number) {
     return new Star(i, point, randNum(3), randNum(3))
 
     function randNum(digitCount: number) {
-      return parseInt(Array.from({ length: digitCount }, () => digits[Math.floor(Math.random() * digits.length)]).join(''))
+      return parseInt(
+        Array.from({ length: digitCount }, () => digits[Math.floor(Math.random() * digits.length)]).join('')
+      )
     }
   }
 }

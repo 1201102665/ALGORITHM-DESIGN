@@ -22,7 +22,15 @@ export default () => {
   const nodes = toNodes(routes)
   const mst = KruskalMST(routes, nodes)
 
-  const mstRoutes = mst.map(([u, v, w]) => `Node(${String(u).padStart(2, '0')}) --- ${String(w).padStart(3, '0')} --- > Node(${String(v).padStart(2, '0')})`).join('\n')
+  const mstRoutes = mst
+    .map(
+      ([u, v, w]) =>
+        `Node(${String(u).padStart(2, '0')}) --- ${String(w).padStart(3, '0')} --- > Node(${String(v).padStart(
+          2,
+          '0'
+        )})`
+    )
+    .join('\n')
   writeFileSync(join(__dirname, 'saved/min_spanning_tree.txt'), mstRoutes)
 }
 
