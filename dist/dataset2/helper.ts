@@ -56,7 +56,7 @@ export function readStars() {
   const stars: Star[] = []
 
   for (const l of lines) {
-    const [i, x, y, z, weight, profit] = l.split(' ')
+    const [i, x, y, z, weight, profit] = l.split(',')
     stars.push(new Star(parseInt(i), new Point(parseInt(x), parseInt(y), parseInt(z)), parseInt(weight), parseInt(profit)))
   }
 

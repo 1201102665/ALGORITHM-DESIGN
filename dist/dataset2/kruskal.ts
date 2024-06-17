@@ -1,4 +1,6 @@
+import { join } from 'path'
 import { Route, readRoutes } from './helper'
+import { writeFileSync } from 'fs'
 
 class TreeNode {
   i: number
@@ -20,22 +22,12 @@ export default () => {
   const nodes = toNodes(routes)
   const mst = KruskalMST(routes, nodes)
 
-  console.log('📢 ------------------------------------📢')
-  console.log('📢 mst:', mst.map(([u, v, w]) => `Node1: ${u}, Node2: ${v}, Weight: ${w}`).join('\n'))
-  console.log('📢 ------------------------------------📢')
-
-  console.log('📢 ------------------------------------📢')
-  console.log('📢 Adjacency Matrix:')
-  mst.forEach((row) => console.log(row.join(',')))
-  console.log('📢 ------------------------------------📢')
+  const mstRoutes = mst.map(([u, v, w]) => `Node(${String(u).padStart(2, '0')}) --- ${String(w).padStart(3, '0')} --- > Node(${String(v).padStart(2, '0')})`).join('\n')
+  writeFileSync(join(__dirname, 'saved/min_spanning_tree.txt'), mstRoutes)
 }
 
 function KruskalMST(routes: Route[], nodes: { [node: number]: TreeNode }) {
   const mst: Route[] = []
-  // const maxNode = Math.max(...routes.flatMap((r) => [r[0], r[1]]))
-  // const adjacencyMatrix = Array(maxNode + 1)
-  //   .fill(null)
-  //   .map(() => Array(maxNode + 1).fill(0))
 
   let index = 0
   while (mst.length < 19) {
@@ -45,12 +37,9 @@ function KruskalMST(routes: Route[], nodes: { [node: number]: TreeNode }) {
     if (find(u, nodes) !== find(v, nodes)) {
       union(u, v, nodes)
       mst.push([u, v, w])
-      // adjacencyMatrix[u][v] = w
-      // adjacencyMatrix[v][u] = w
     }
   }
 
-  // return adjacencyMatrix
   return mst
 }
 

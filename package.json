@@ -1,16 +1,15 @@
 {
-  "name": "assignment",
+  "name": "algorithm-assignment",
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "dist/index.ts",
-  "scripts": {
-    "start": "ts-node ."
-  },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "csv-writer": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "*"
   }
 }

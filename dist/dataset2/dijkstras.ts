@@ -1,4 +1,6 @@
+import { join } from 'path'
 import { Star, readRoutes, readStars } from './helper'
+import { writeFileSync } from 'fs'
 
 type PathNode = {
   i: number
@@ -11,16 +13,24 @@ export default (startI: number = 0) => {
   const routes = readRoutes()
   const table = buildTable(nodes, routes, startI)
 
-  console.log('📢 ------------------------------------------📢')
-  console.log('📢 | file: dijkstras.ts:28 | nodes:', nodes.map((n) => [n.i, n.dist, n.prev].join(',')).join('\n'))
-  console.log('📢 ------------------------------------------📢')
+  const nodesMap = nodes.map(({ i, prev, dist }) => `${String(i).padStart(2, '0')}, previous -> ${String(prev).padStart(2, '0')}, distance -> ${String(dist).padStart(3, '0')} `).join('\n')
+  const paths = nodes.map((_, i) => `${startI} => ${String(i).padStart(2, '0')}: ${getShortestPath(table, startI, i).join(' -> ')}`).join('\n')
 
-  console.log('📢 ------------------------------------------📢')
-  for (let i = 0; i < nodes.length; i++) {
-    const path = getShortestPath(table, startI, i)
-    console.log(`📢 shortest path from ${startI} to ${i}:`, path)
+  const data = `${nodesMap}\n\n${paths}`
+  writeFileSync(join(__dirname, 'saved/shortest_paths.txt'), data)
+}
+
+function getShortestPath(table: PathNode[], startI: number, endI: number) {
+  const path: number[] = []
+  let node = table[endI]
+
+  while (node.i !== startI) {
+    path.push(node.i)
+    node = table[node.prev!]
   }
-  console.log('📢 ------------------------------------------📢')
+
+  path.push(startI)
+  return path.reverse()
 }
 
 function toNodes(stars: Star[]): PathNode[] {
@@ -76,17 +86,4 @@ function buildTable(nodes: PathNode[], routes: [number, number, number][], start
     arr.sort((a, b) => a.dist - b.dist)
     unvisited = new Set(arr)
   }
-}
-
-function getShortestPath(table: PathNode[], startI: number, endI: number) {
-  const path: number[] = []
-  let node = table[endI]
-
-  while (node.i !== startI) {
-    path.push(node.i)
-    node = table[node.prev!]
-  }
-
-  path.push(startI)
-  return path.reverse()
 }

@@ -1,39 +1,59 @@
-import { Star, readStars } from './helper'
+import { join } from 'path'
+import { readStars } from './helper'
+import { writeFileSync } from 'fs'
 
 export default () => {
   const stars = readStars()
-  const len = stars.length
-  const capacity = 8
-  const cache = Array.from({ length: len + 1 }, () => Array(capacity + 1).fill(-1))
 
-  const profit = zeroOneKnapsack(stars, len, capacity, cache)
-  console.log('📢 ------------------------------------📢')
-  console.log('📢 Maximum Profit:', profit)
-  console.log('📢 ------------------------------------📢')
+  const cap = 800 // in kg
+  const wArr = stars.map((s) => s.weight)
+  const pArr = stars.map((s) => s.profit)
+
+  const table: number[][] = makeTable(cap, wArr, pArr)
+  const toVisit = selectStars(table, cap, wArr)
+
+  const tableData = table.map((row) => row.map((num) => String(num).padStart(4, '0')).join(',')).join('\n')
+  const toVisitData =
+    '| Index | Name | Weight | Profit |\n| --- | --- | --- | --- |\n' +
+    toVisit.map((i) => `| ${String(stars[i].i).padStart(2, '0')} | ${stars[i].name} | ${String(wArr[i]).padStart(3, '0')} | ${String(pArr[i]).padStart(3, '0')} |`).join('\n')
+
+  const data = `${tableData}\n\n${toVisitData}`
+  writeFileSync(join(__dirname, 'saved/conquer_quest.txt'), data)
 }
 
-function zeroOneKnapsack(arr: Star[] | number[][], n: number, cap: number, cache: any[][]) {
-  // Base Case: No capacity or no items
-  if (cap === 0 || n === 0) {
-    cache[n][cap] = 0
-    return cache[n][cap]
+function makeTable(cap: number, wArr: number[], pArr: number[]): number[][] {
+  const len = wArr.length
+
+  const table: number[][] = Array.from({ length: len + 1 }, () => Array(cap + 1).fill(0))
+
+  for (let i = 1; i <= len; i++) {
+    const j = i - 1
+    const w = wArr[j]
+    const p = pArr[j]
+
+    for (let currCap = 1; currCap <= cap; currCap++) {
+      table[i][currCap] = table[j][currCap]
+      const current = table[j][currCap - w] + p
+
+      if (currCap >= w && current > table[i][currCap]) table[i][currCap] = current
+    }
   }
 
-  // Lookup (value already calculated)
-  if (cache[n][cap] !== -1) {
-    return cache[n][cap]
+  return table
+}
+
+function selectStars(table: number[][], cap: number, wArr: number[]): number[] {
+  const len = wArr.length
+  const selected: number[] = []
+
+  for (let i = len; i > 0; i--) {
+    const j = i - 1
+    if (table[i][cap] != table[j][cap]) {
+      selected.push(j)
+      cap -= wArr[j]
+    }
   }
 
-  // Profit when excluding the nth item
-  let notPick = zeroOneKnapsack(arr, n - 1, cap, cache)
-
-  // Profit when including the nth item
-  let pick = 0
-  if (arr[n - 1][0] <= cap) {
-    // If weight of the nth item is within the capacity
-    pick = arr[n - 1][1] + zeroOneKnapsack(arr, n - 1, cap - arr[n - 1][0], cache)
-  }
-
-  cache[n][cap] = Math.max(pick, notPick) // maximize profit
-  return cache[n][cap]
+  selected.reverse()
+  return selected
 }
